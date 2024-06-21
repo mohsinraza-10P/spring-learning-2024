@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  api-service:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - social_app_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/social_app_db?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: social_app_user
+      SPRING_DATASOURCE_PASSWORD: social_app_pw
+    depends_on:
+      - mysqldb
+    volumes:
+      - .m2:/root/.m2
+
+  mysqldb:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - "3306:3306"
+    networks:
+      - social_app_network
+    environment:
+      MYSQL_DATABASE: social_app_db
+      MYSQL_USER: social_app_user
+      MYSQL_PASSWORD: social_app_pw
+      MYSQL_ROOT_PASSWORD: root
+
+networks:
+  social_app_network:
